@@ -1,0 +1,248 @@
+functions
+11.	Shifted Rotated Weierstrass Function
+4.  Shifted Schwefel's Problem 1.2 with Noise in Fitness
+10.	Shifted Rotated Rastrigin's  Function
+
+#########################################################################################################
+Genetic algorithm
+#########################################################################################################
+clc, clear, close all
+rng default
+global initial_flag
+%% Genetic Algorithm Optimization 15 iterations
+initial_flag = 0;
+options = optimoptions('ga', 'PlotFcn', {@gaplotbestf, @gaplotdistance});
+
+% Initialize variables
+ga_main_val = zeros(1, 15);
+ga_main_exit_flag = zeros(1, 15);
+ga_main_op = zeros(1, 15);
+
+for i = 1:15
+    initial_flag = 0;
+    % ga for CEC function 10, D=2
+    [ga_x, ga_val, ga_exit_flag, ga_output] = ga(@(x) benchmark_func(x, 11), 2, [], [], [], [], [], [], [], options);
+    
+    % save visualizations to file
+    fname = sprintf('filename(%d).fig', i);
+    savefig(fname)
+
+    % Display information about the optimization process
+    disp(['Iteration ', num2str(i), ': Exit Flag - ', num2str(ga_exit_flag)]);
+    disp(['   Termination Reason: ', ga_output.message]);
+    disp(['   Best Value: ', num2str(ga_val)]);
+    
+    % Store results in arrays
+    ga_main_val(i) = ga_val;
+    ga_main_exit_flag(i) = ga_exit_flag;
+
+    % Check if 'fval' field exists in the output structure
+    if isfield(ga_output, 'fval')
+        ga_main_op(i) = min(ga_output.fval);
+        disp(['   Best Objective Value: ', num2str(ga_main_op(i))]);
+    else
+        % If 'fval' doesn't exist, you may need to adjust accordingly
+        ga_main_op(i) = NaN;  % or any appropriate default value
+        disp('   No Objective Value information available.');
+    end
+    
+    disp(' ');  % Add a blank line for better readability
+end
+
+%% GA 15 iteration measures
+ga_val_max = max(ga_main_val);
+ga_val_min = min(ga_main_val);
+ga_val_mean = mean(ga_main_val);
+ga_val_std = std(ga_main_val);
+
+% Display overall results
+disp(' ');
+disp('Overall Results:');
+disp(['   Max Value: ', num2str(ga_val_max)]);
+disp(['   Min Value: ', num2str(ga_val_min)]);
+disp(['   Mean Value: ', num2str(ga_val_mean)]);
+disp(['   Standard Deviation: ', num2str(ga_val_std)]);
+
+######################################################################################################
+Simulated Annealing
+#######################################################################################################
+clc, clear, close all
+rng default
+global initial_flag
+%% Simulated Annealing Optimization 15 iterations
+initial_flag = 0;
+options = optimoptions('simulannealbnd', 'PlotFcn', {@saplotbestx, @saplotbestf, @saplotx, @saplotf});
+
+% Initialize variables
+sa_main_val = zeros(1, 15);
+sa_main_exit_flag = zeros(1, 15);
+sa_main_op = zeros(1, 15);
+
+for i = 1:15
+    initial_flag = 0;
+    % Simulated Annealing for CEC function 6, D=2
+    [sa_x, sa_val, sa_exit_flag, sa_output] = simulannealbnd(@(x) benchmark_func(x, 6), rand(1, 2), [], [], options);
+    
+    % save visualizations to file
+    fname = sprintf('filename_sa(%d).fig', i);
+    savefig(fname)
+
+    % Display information about the optimization process for each iteration
+    disp(['Iteration ', num2str(i), ': Exit Flag - ', num2str(sa_exit_flag)]);
+    disp(['   Termination Reason: ', sa_output.message]);
+    disp(['   Best Value: ', num2str(sa_val)]);
+    
+    % Store results in arrays
+    sa_main_val(i) = sa_val;
+    sa_main_exit_flag(i) = sa_exit_flag;
+
+    % Check if 'fval' field exists in the output structure
+    if isfield(sa_output, 'fval')
+        sa_main_op(i) = min(sa_output.fval);
+        disp(['   Best Objective Value: ', num2str(sa_main_op(i))]);
+    else
+        % If 'fval' doesn't exist, you may need to adjust accordingly
+        sa_main_op(i) = NaN;  % or any appropriate default value
+        disp('   No Objective Value information available.');
+    end
+    
+    disp(' ');  % Add a blank line for better readability
+end
+
+%% Simulated Annealing 15 iteration measures
+sa_val_max = max(sa_main_val);
+sa_val_min = min(sa_main_val);
+sa_val_mean = mean(sa_main_val);
+sa_val_std = std(sa_main_val);
+
+% Display overall results
+disp(' ');
+disp('Overall Results:');
+disp(['   Max Value: ', num2str(sa_val_max)]);
+disp(['   Min Value: ', num2str(sa_val_min)]);
+disp(['   Mean Value: ', num2str(sa_val_mean)]);
+disp(['   Standard Deviation: ', num2str(sa_val_std)]);
+
+
+#######################################################################################
+Particle Swarm
+#######################################################################################
+
+clc, clear, close all
+rng default
+global initial_flag
+%% Particle Swarm Optimization 15 iterations
+initial_flag = 0;
+options = optimoptions('particleswarm', 'PlotFcn', {@pswplotbestf});
+
+% Initialize variables
+pso_main_val = zeros(1, 15);
+pso_main_exit_flag = zeros(1, 15);
+pso_main_op = zeros(1, 15);
+
+for i = 1:15
+    initial_flag = 0;
+    % Particle Swarm Optimization for CEC function 6, D=2
+    [pso_x, pso_val, pso_exit_flag, pso_output] = particleswarm(@(x) benchmark_func(x, 6), 2, [], [], options);
+    
+    % save visualizations to file
+    fname = sprintf('filename_pso(%d).fig', i);
+    savefig(fname)
+
+    % Display information about the optimization process
+    disp(['Iteration ', num2str(i), ': Exit Flag - ', num2str(pso_exit_flag)]);
+    disp(['   Termination Reason: ', pso_output.message]);
+    disp(['   Best Value: ', num2str(pso_val)]);
+    
+    % Store results in arrays
+    pso_main_val(i) = pso_val;
+    pso_main_exit_flag(i) = pso_exit_flag;
+
+    % Check if 'fval' field exists in the output structure
+    if isfield(pso_output, 'fval')
+        pso_main_op(i) = min(pso_output.fval);
+        disp(['   Best Objective Value: ', num2str(pso_main_op(i))]);
+    else
+        % If 'fval' doesn't exist, you may need to adjust accordingly
+        pso_main_op(i) = NaN;  % or any appropriate default value
+        disp('   No Objective Value information available.');
+    end
+    
+    disp(' ');  % Add a blank line for better readability
+end
+
+%% Particle Swarm Optimization 15 iteration measures
+pso_val_max = max(pso_main_val);
+pso_val_min = min(pso_main_val);
+pso_val_mean = mean(pso_main_val);
+pso_val_std = std(pso_main_val);
+
+% Display overall results
+disp(' ');
+disp('Overall Results:');
+disp(['   Max Value: ', num2str(pso_val_max)]);
+disp(['   Min Value: ', num2str(pso_val_min)]);
+disp(['   Mean Value: ', num2str(pso_val_mean)]);
+disp(['   Standard Deviation: ', num2str(pso_val_std)]);
+
+##################################################################################################
+Pattern search (optimization)
+##################################################################################################
+clc, clear, close all
+rng default
+global initial_flag
+%% Pattern Search Optimization 15 iterations
+initial_flag = 0;
+options = optimoptions('patternsearch', 'PlotFcn', {@psplotbestf, @psplotbestx});
+
+% Initialize variables
+ps_main_val = zeros(1, 15);
+ps_main_exit_flag = zeros(1, 15);
+ps_main_op = zeros(1, 15);
+
+for i = 1:15
+    initial_flag = 0;
+    % Pattern Search for CEC function 6, D=2
+    [ps_x, ps_val, ps_exit_flag, ps_output] = patternsearch(@(x) benchmark_func(x, 6), rand(1, 2), [], [], [], [], [], [], options);
+    
+    % save visualizations to file
+    fname = sprintf('filename_ps(%d).fig', i);
+    savefig(fname)
+
+    % Display information about the optimization process for each iteration
+    disp(['Iteration ', num2str(i), ': Exit Flag - ', num2str(ps_exit_flag)]);
+    disp(['   Termination Reason: ', ps_output.message]);
+    disp(['   Best Value: ', num2str(ps_val)]);
+    
+    % Store results in arrays
+    ps_main_val(i) = ps_val;
+    ps_main_exit_flag(i) = ps_exit_flag;
+
+    % Check if 'fval' field exists in the output structure
+    if isfield(ps_output, 'fval')
+        ps_main_op(i) = min(ps_output.fval);
+        disp(['   Best Objective Value: ', num2str(ps_main_op(i))]);
+    else
+        % If 'fval' doesn't exist, you may need to adjust accordingly
+        ps_main_op(i) = NaN;  % or any appropriate default value
+        disp('   No Objective Value information available.');
+    end
+    
+    disp(' ');  % Add a blank line for better readability
+end
+
+%% Pattern Search 15 iteration measures
+ps_val_max = max(ps_main_val);
+ps_val_min = min(ps_main_val);
+ps_val_mean = mean(ps_main_val);
+ps_val_std = std(ps_main_val);
+
+% Display overall results
+disp(' ');
+disp('Overall Results:');
+disp(['   Max Value: ', num2str(ps_val_max)]);
+disp(['   Min Value: ', num2str(ps_val_min)]);
+disp(['   Mean Value: ', num2str(ps_val_mean)]);
+disp(['   Standard Deviation: ', num2str(ps_val_std)]);
+
+
