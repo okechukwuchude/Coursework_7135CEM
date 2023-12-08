@@ -3,7 +3,7 @@ functions
 4.  Shifted Schwefel's Problem 1.2 with Noise in Fitness
 10.	Shifted Rotated Rastrigin's  Function
 
-######### FUNCTION 11 #########################
+######### FUNCTION 11 #####################
 
 #########################################################################################################
 Genetic algorithm
